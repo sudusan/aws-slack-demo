@@ -1,0 +1,17 @@
+{
+    "Parameters": {
+        "AMI":	"ami-0a887e401f7654935",
+        "NestedTemplateBucket": "slack-demo-cicd-nestedtemplates3bucket-1qh66qo7haqmn",
+        "Application":	"slack-cicd-demo",
+        "EC2InstanceType": "t2.micro",
+        "EC2SubnetA": "subnet-1c317340",
+        "EC2SubnetB": "subnet-340c4d53",
+        "LBSubnetIDA": "subnet-1c317340",
+        "LBSubnetIDB": "subnet-340c4d53",
+        "Environment" :	"PRD",
+        "InternalCorporateCidrIp" : "0.0.0.0/0",
+        "KeyName" :	"isen1-use1-kp",
+        "SNSEndpoint" :	"mihira@yahoo.com",
+        "VpcId" : "vpc-bf1785c5"
+    }
+}
