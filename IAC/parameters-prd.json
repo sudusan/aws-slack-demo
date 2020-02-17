@@ -1,7 +1,7 @@
 {
     "Parameters": {
         "AMI":	"ami-0a887e401f7654935",
-        "NestedTemplateBucket": "cicd-nestedtemplatebucket-i51coqa6enqz",
+        "NestedTemplateBucket": "aws-slack-demo-cicd-nestedtemplates3bucket-14z3qajsrfef0",
         "Application":	"slack-cicd-demo",
         "EC2InstanceType": "t2.micro",
         "EC2SubnetA": "subnet-1c317340",

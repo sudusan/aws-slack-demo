@@ -190,7 +190,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       Tags: []
-  NestedTemplateBucket:
+  NestedTemplateS3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
       Tags: []
@@ -386,7 +386,6 @@ Resources:
                   - 'arn:aws:logs:*:*:*'
   
   DeleteBucketContentsLambda:
-    DependsOn: CopyZips
     Type: 'AWS::Lambda::Function'
     Properties:
       Handler: lambda_function.lambda_handler
@@ -763,7 +762,7 @@ Resources:
         Variables:
           TEMPLATE_BUCKET: !Ref 'OutputBucket'
           TEMPLATE_BUCKET_KEY: !Ref 'SourceObjectKey'
-          TARGET_TEMPLATE_BUCKET: !Ref 'NestedTemplateBucket'
+          TARGET_TEMPLATE_BUCKET: !Ref 'NestedTemplateS3Bucket'
       Code:
         ZipFile: |
           import urllib
@@ -1119,7 +1118,7 @@ Outputs:
       Ref: OutputBucket
   NestedTemplateBucketName:
     Value:
-      Ref: NestedTemplateBucket
+      Ref: NestedTemplateS3Bucket
   PublicSSHKey:
     Value:
       Ref: CreateSSHKey
