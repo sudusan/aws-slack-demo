@@ -196,7 +196,7 @@ Resources:
         - !Ref LBSubnetIDB
       SecurityGroups:
         - !Ref LBSecurityGroup
-      Scheme: external
+      Scheme: internet-facing
       LoadBalancerAttributes:
         - Key: routing.http2.enabled
           Value: 'true'
@@ -207,6 +207,8 @@ Resources:
   ALBListenerHTTP:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     Properties:
+      DefaultActions:
+        - Type: "forward"
       LoadBalancerArn: !Ref ApplicationLoadBalancer
       Port: 80
       Protocol: HTTP
