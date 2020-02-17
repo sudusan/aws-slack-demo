@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Compute template for delcamweb server with ALB.
+Description: Compute template for myapp server with ALB.
 
 Parameters: 
   KeyName:
@@ -204,29 +204,9 @@ Resources:
           Value: 'true'
         - Key: access_logs.s3.bucket
           Value: !Ref ALBS3Bucket
-  ALBListenerHTTPS:
-    Type: 'AWS::ElasticLoadBalancingV2::Listener'
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref ALBTargetGroup
-      LoadBalancerArn: !Ref ApplicationLoadBalancer
-      Certificates:
-        - CertificateArn: !Ref LBCertificate
-      Port: 443
-      Protocol: HTTPS
   ALBListenerHTTP:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     Properties:
-      DefaultActions:
-        - RedirectConfig:
-            Host: '#{host}'
-            Path: '/#{path}'
-            Port: '443'
-            Protocol: HTTPS
-            Query: '#{query}'
-            StatusCode: HTTP_301
-          Type: redirect
       LoadBalancerArn: !Ref ApplicationLoadBalancer
       Port: 80
       Protocol: HTTP
@@ -242,15 +222,6 @@ Resources:
       Protocol: HTTP
       UnhealthyThresholdCount: 5
       VpcId: !Ref VpcId
-  LBCertificate:
-    Type: 'AWS::CertificateManager::Certificate'
-    Properties:
-      DomainName: delcamweb.autodesk.com
-      DomainValidationOptions:
-        - DomainName: delcamweb.autodesk.com
-          ValidationDomain: autodesk.com
-      ValidationMethod: EMAIL
-
 
   WebServerASG01:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -270,7 +241,7 @@ Resources:
       MaxSize: '1'
       Tags:
       - Key: Name
-        Value: delcamweb-prd-asg-1
+        Value: myapp-prd-asg-1
         PropagateAtLaunch: true
       - Key: Backup
         Value: Backup
