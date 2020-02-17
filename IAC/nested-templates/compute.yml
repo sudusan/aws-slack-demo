@@ -209,6 +209,7 @@ Resources:
     Properties:
       DefaultActions:
         - Type: "forward"
+          TargetGroupArn: !Ref ALBTargetGroup
       LoadBalancerArn: !Ref ApplicationLoadBalancer
       Port: 80
       Protocol: HTTP
