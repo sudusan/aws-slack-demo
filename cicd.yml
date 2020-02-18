@@ -50,6 +50,7 @@ Parameters:
  SlackWebhookUrl:
     Description: Incoming Webhook url for slack after you create your app, store and encrypt in parameter store, It should be of form {{resolve:ssm-secure:<key-name>:<version>}}'
     Type: String
+    Default: https://hooks.slack.com/services/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
  SlackChannel:
     Description: Slack Channel where approvals needs to be sent
     Type: String
@@ -57,13 +58,11 @@ Parameters:
  SlackVerifToken:
     Description: slack verification token of the app, store and encrypt in parameter store, It should be of form {{resolve:ssm-secure:<key-name>:<version>}}'
     Type: String
+    Default: 1uqQ1gnfERAyMpCmkAbWrMvc
  SlackApprovalMembers:
     Description: List of AD account of the member who can perform the slack approval for CICD.
     Type: String
-    Default: sanksu
- NotificationsSNSTopic:
-    Description: ARN of the SNS topic that will be used for notifications on the pipeline (if not specified a new one will be created).
-    Type: String
+    Default: mihira
  AllowedIps:
     Default: 0.0.0.0/0
     Description: gitpull method only. Comma seperated list of IP CIDR blocks for source
@@ -83,7 +82,6 @@ Parameters:
     Description: VPC Id
     Type: AWS::EC2::VPC::Id    
 Conditions:
-  CreateNewSNSTopic: !Equals [!Ref NotificationsSNSTopic, '']
   UseAllowedIps: !Not [!Equals [ !Ref AllowedIps, '']]
   UseApiSecret: !Not [!Equals [ !Ref ApiSecret, '']]
 Resources:
@@ -1301,6 +1299,21 @@ Resources:
             PollForSourceChanges: true
           RunOrder: 1
       -
+        Name: Build
+        Actions:
+        -
+          Name: CodeBuild
+          InputArtifacts:
+            - Name: SourceOutput  
+          ActionTypeId:
+            Category: Build
+            Owner: AWS
+            Version: "1"
+            Provider: CodeBuild
+          Configuration:
+            ProjectName: !Ref CodeBuildPreDeployTest
+          RunOrder: 2
+      -
         Name: Unzip
         Actions:
         -
@@ -1326,11 +1339,8 @@ Resources:
             Provider: Manual
             Version: '1'
           Configuration:
-            NotificationArn: !If
-              - CreateNewSNSTopic
-              - !Ref CodePipelineSNSTopic
-              - !Ref NotificationsSNSTopic
-          RunOrder: 3
+            NotificationArn: !Ref CodePipelineSNSTopic
+          RunOrder: 4
       -
         Name: Deploy
         Actions:
@@ -1350,7 +1360,7 @@ Resources:
             RoleArn: !GetAtt CodePipelineServiceRole.Arn
             TemplateConfiguration: SourceOutput::IAC/parameters-prd.json
             TemplatePath: SourceOutput::IAC/application-stack.yml
-          RunOrder: 4  
+          RunOrder: 5  
       -
         Name: Test
         Actions:
@@ -1365,7 +1375,7 @@ Resources:
             Provider: CodeBuild
           Configuration:
             ProjectName: !Ref CodeBuildPostDeployTest
-          RunOrder: 7        
+          RunOrder: 6        
       ArtifactStore:
         Type: S3
         Location: !Ref CodePipelineArtifactStoreBucket
