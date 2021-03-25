@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: delcamweb template with nested stacks
+Description: sample template with nested stacks
 Parameters:
   NestedTemplateBucket:
     Type: String
