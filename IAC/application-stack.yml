@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: sample template with nested stacks
+Description: sample demo iac template with nested stacks
 Parameters:
   NestedTemplateBucket:
     Type: String
